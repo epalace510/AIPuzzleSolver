@@ -1,28 +1,22 @@
 function BFS(inmat)
 %BFS Summary of this function goes here
-%keep track of all visited nodes with a matrix of strings.
-visited=mat2str(inmat);
-%Moves will be my queue of moves which I haven't yet performed.
+visited=changestate(inmat);
+parent=1;
+parentIndex=intmax;
 moves=mat2str(inmat);
 tic;
-%while there are moves to do...
 while(~isempty(moves))
-  %take a state (move) from the front of my queue
     inmat=str2num(moves(1,:));
-    %If we've found the solution, break! We're done.
     isSol=checksolution(inmat);
     if(isSol)
         break;
     end
     zeroi=0;
     zeroj=0;
-    %returns a matrix of 0s and 1s, where 1s are bordered by inmat's 0s.
-    %This will likely be deprecated for efficiency.
     connectionMatrix=connections(inmat);
     for i=1:3
         for j=1:3
             if inmat(i,j)==0
-              %Find the coordinates of the 0 (blank tile) in inmat.
                 zeroi=i;
                 zeroj=j;
             end
@@ -30,29 +24,42 @@ while(~isempty(moves))
     end
     for i=1:3
         for j=1:3
-          %Look for tiles I can move.
             if connectionMatrix(i,j)==1
-              %have to use workingClone instead of inmat so I don't accidentally take a move before unqueueing it.
                 workingClone=inmat;
-                %currentChoice is the value of the tile I'm moving.
                 currentChoice=workingClone(i,j);
                 workingClone(i,j)=0;
-                %switches the c=values.
                 workingClone(zeroi,zeroj)=currentChoice;
-                %Checks to see if the matrix we just got has already been seen (either on the queue or has been taken and unqueued.
-                if(isempty(find(strcmp(visited,mat2str(workingClone)))))
-                  %Adds the state to the matrix of states we've visited. This prevents infinite loops.
-                    visited=cat(1,visited,mat2str(workingClone));
-                    %This adds the value at the end of the matrix moves, emulating a queue.
+                state=changestate(workingClone);
+                if(~(any(visited(:) == state)))
+                    visited=cat(1,visited,changestate(workingClone));
+                    parent=cat(1,parent,find(visited==changestate(inmat)));
+                    %makes a queue
                     moves=cat(1,moves,mat2str(workingClone));
                 end
             end
         end
     end
-    %This removes the first line of the moves queue, emulating the ability to "pop" a state off the queue.
     moves=moves(~ismember(1:size(moves,1),1),:);
 end
-%draws the puzzle.
-drawpuzzle(inmat);
+if(isSol)
+    reverseOrder=changestate(inmat);
+    parentIndex=parent(find(visited==changestate(inmat)));
+    preIndex=0;
+    while(parentIndex~=preIndex)
+        preIndex=parentIndex;
+        inmat=visited(parentIndex);
+        parentIndex=parent(parentIndex);
+        reverseOrder=cat(1,inmat,reverseOrder);
+    end
+    reverseOrder
+else
+    'There is no solution.'
+end
+%drawpuzzle(inmat);
 toc
+end
+
+function reint = changestate(a)
+charst=strcat(num2str(a(1)),num2str(a(4)),num2str(a(7)),num2str(a(2)),num2str(a(5)),num2str(a(8)),num2str(a(3)),num2str(a(6)),num2str(a(9)));
+reint = eval(charst);
 end
