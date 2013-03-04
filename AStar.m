@@ -39,8 +39,8 @@ while(~isempty(moves))
                     tCost=runningCost(parent(end))+1;
                     %runningCost=cat(1,runningCost,tCost);
                     %tDistance=goalDistance(workingClone);
-                    runningCost=cat(1,runningCost,(tCost+goalDistance(workingClone)));
-                    distanceMatrix=cat(1,distanceMatrix,tDistance);
+                    runningCost=cat(1,runningCost,tCost);
+                    distanceMatrix=cat(1,distanceMatrix,(tDistance+tCost);
                     %Places the node either on the moves matrix like a
                     %queue (if it does not have a higher cost) or like a
                     %stack (if it has a higher cost).
@@ -54,18 +54,18 @@ while(~isempty(moves))
                         while(count<=(size(moves,1)))
 %                             'loopdeloop'
                             %if((tCost+tDistance)<(runningCost(find(visited==changestate(str2num(moves(count,:)))))+distanceMatrix(find(visited==changestate(str2num(moves(count,:)))))))
-                            if((tCost+tDistance)<(runningCost(find(visited==changestate(str2num(moves(count,:)))))))
+                            if((tCost+tDistance)<(distanceMatrix(find(visited==changestate(str2num(moves(count,:)))))))
                                 if(count==1)
-                                    moves=cat(1,mat2str(workingClone),moves)
+                                    moves=cat(1,mat2str(workingClone),moves);
                                 else
                                     tempMatrix=moves(1:count-1,:);
                                     tempMatrix=cat(1,tempMatrix,mat2str(workingClone));
-                                    moves=cat(1,tempMatrix,moves(count:end,:))
+                                    moves=cat(1,tempMatrix,moves(count:end,:));
                                 end
                                 break;
                             end
                             if(count==(size(moves,1)))
-                                moves=cat(1,moves,mat2str(workingClone))
+                                moves=cat(1,moves,mat2str(workingClone));
                                 break;
                             end
                             count=count+1;
