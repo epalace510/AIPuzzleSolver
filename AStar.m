@@ -37,8 +37,9 @@ while(~isempty(moves))
                     visited=cat(1,visited,changestate(workingClone));
                     parent=cat(1,parent,find(visited==changestate(inmat)));
                     tCost=runningCost(parent(end))+1;
-                    runningCost=cat(1,runningCost,tCost);
-                    tDistance=goalDistance(workingClone);
+                    %runningCost=cat(1,runningCost,tCost);
+                    %tDistance=goalDistance(workingClone);
+                    runningCost=cat(1,runningCost,(tCost+goalDistance(workingClone)));
                     distanceMatrix=cat(1,distanceMatrix,tDistance);
                     %Places the node either on the moves matrix like a
                     %queue (if it does not have a higher cost) or like a
@@ -52,7 +53,8 @@ while(~isempty(moves))
 %                         'outside the small while.'
                         while(count<=(size(moves,1)))
 %                             'loopdeloop'
-                            if((tCost+tDistance)<=(runningCost(find(visited==changestate(str2num(moves(count,:)))))+distanceMatrix(find(visited==changestate(str2num(moves(count,:)))))))
+                            %if((tCost+tDistance)<(runningCost(find(visited==changestate(str2num(moves(count,:)))))+distanceMatrix(find(visited==changestate(str2num(moves(count,:)))))))
+                            if((tCost+tDistance)<(runningCost(find(visited==changestate(str2num(moves(count,:)))))))
                                 if(count==1)
                                     moves=cat(1,mat2str(workingClone),moves)
                                 else
