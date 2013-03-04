@@ -4,6 +4,7 @@ visited=changestate(inmat);
 parent=1;
 parentIndex=intmax;
 moves=mat2str(inmat);
+runningCost=1;
 tic;
 while(~isempty(moves))
     inmat=str2num(moves(1,:));
@@ -33,13 +34,37 @@ while(~isempty(moves))
                 if(~(any(visited(:) == state)))
                     visited=cat(1,visited,changestate(workingClone));
                     parent=cat(1,parent,find(visited==changestate(inmat)));
+                    tCost=runningCost(parent(end))+1;
+                    runningCost=cat(1,runningCost,tCost);
                     %Places the node either on the moves matrix like a
-                    %queue (if it does not have a lower cost) or like a
+                    %queue (if it does not have a higher cost) or like a
                     %stack (if it has a higher cost).
-                    if(CostDeterminer(inmat(i,j))<2)
-                        moves=cat(1,mat2str(workingClone),moves);
-                    else
-                        moves=cat(1,moves,mat2str(workingClone));
+                    count=size(moves,1);
+%                     'Big Loop'
+                    while(count>0)
+%                         'One'
+%                         runningCost(find(visited==changestate(str2num(moves(count,:)))))
+                        if(tCost>=runningCost(find(visited==changestate(str2num(moves(count,:))))))
+                            runningCost(find(visited==changestate(str2num(moves(count,:)))));
+                            tempMatrix=moves(count:end,:);
+                            tempMatrix=cat(1,mat2str(workingClone),tempMatrix);
+                            moves=cat(1,moves(1:count-1,:),tempMatrix);
+                            break;
+                        end
+%                         if(tCost<runningCost(find(visited==changestate(str2num(moves(count,:))))))
+%                             'Two'
+%                             runningCost(find(visited==changestate(str2num(moves(count,:)))))
+%                             tempMatrix=moves(1:count,:);
+%                             tempMatrix=cat(1,tempMatrix,mat2str(workingClone));
+%                             moves=cat(1,tempMatrix,moves(count+2:end,:));
+%                             break;
+%                         end
+%                         if(count==size(moves,1))
+%                             'Three'
+%                             moves=cat(1,moves,mat2str(workingClone));
+%                             break;
+%                         end
+                        count=count-1;
                     end
                 end
             end
