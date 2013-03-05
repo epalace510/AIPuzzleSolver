@@ -34,13 +34,13 @@ while(~isempty(moves))
                 workingClone(zeroi,zeroj)=currentChoice;
                 state=changestate(workingClone);
                 if(~(any(visited(:) == state)))
-                    visited=cat(1,visited,changestate(workingClone));
-                    parent=cat(1,parent,find(visited==changestate(inmat)));
+                    visited=[visited;changestate(workingClone)];
+                    parent=[parent;find(visited==changestate(inmat))];
                     tCost=runningCost(parent(end))+1;
                     %runningCost=cat(1,runningCost,tCost);
-                    %tDistance=goalDistance(workingClone);
-                    runningCost=cat(1,runningCost,tCost);
-                    weightMatrix=cat(1,weightMatrix,(tDistance+tCost);
+                    tDistance=goalDistance(workingClone);
+                    runningCost=[runningCost;tCost];
+                    weightMatrix=[weightMatrix;(tDistance+tCost)];
                     %Places the node either on the moves matrix like a
                     %queue (if it does not have a higher cost) or like a
                     %stack (if it has a higher cost).
@@ -56,16 +56,16 @@ while(~isempty(moves))
                             %if((tCost+tDistance)<(runningCost(find(visited==changestate(str2num(moves(count,:)))))+weightMatrix(find(visited==changestate(str2num(moves(count,:)))))))
                             if((tCost+tDistance)<(weightMatrix(find(visited==changestate(str2num(moves(count,:)))))))
                                 if(count==1)
-                                    moves=cat(1,mat2str(workingClone),moves);
+                                    moves=[mat2str(workingClone);moves];
                                 else
                                     %tempMatrix=moves(1:count-1,:);
                                     %tempMatrix=cat(1,tempMatrix,mat2str(workingClone));
-                                    moves=(1:count-1,mat2str(workingClone),count:end);
+                                    moves=[moves(1:count-1,:); mat2str(workingClone); moves(count:end,:)];
                                 end
                                 break;
                             end
                             if(count==(size(moves,1)))
-                                moves=cat(1,moves,mat2str(workingClone));
+                                moves=[moves;mat2str(workingClone)];
                                 break;
                             end
                             count=count+1;
